@@ -2,6 +2,8 @@
 
 A Chrome extension that remembers your playback position for NFL+ game replays. NFL+ does not natively save your position when watching replays, so this extension fills that gap.
 
+<img src="popup_ui_tight.jpg">
+
 ## What it does
 
 - Automatically detects when you're watching a game on `nfl.com/plus/games/*`
