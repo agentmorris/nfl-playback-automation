@@ -56,3 +56,7 @@ If you want to publish this extension publicly:
 5. Submit for review
 
 Google typically reviews submissions within 1-3 business days. A simple extension like this should pass without issues. Updates go through the same review process.
+
+## Development notes
+
+- **Always increment the version number** in `manifest.json` with any code change, even minor ones. This lets the user verify that an update was picked up after reloading the extension in `chrome://extensions`. The current version is shown on the extension's card.
