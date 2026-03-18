@@ -103,4 +103,41 @@ function getTimeAgo(date) {
   return days + "d ago";
 }
 
+// Show the save button only if the active tab is an NFL game page
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+  const tab = tabs[0];
+  if (tab && tab.url && tab.url.match(/nfl\.com\/plus\/games\//)) {
+    document.getElementById("save-btn").style.display = "block";
+  }
+});
+
+document.getElementById("save-btn").addEventListener("click", function () {
+  const btn = document.getElementById("save-btn");
+  const status = document.getElementById("save-status");
+  btn.disabled = true;
+
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { action: "savePosition" }, function (response) {
+      if (chrome.runtime.lastError) {
+        status.style.color = "#c00";
+        status.textContent = "Error: content script not loaded. Try refreshing the page.";
+        status.style.display = "block";
+        btn.disabled = false;
+        return;
+      }
+      if (response && response.success) {
+        status.style.color = "#060";
+        status.textContent = "Saved at " + formatTime(response.data.time);
+        status.style.display = "block";
+        renderGames();
+      } else {
+        status.style.color = "#c00";
+        status.textContent = response ? response.error : "Unknown error";
+        status.style.display = "block";
+      }
+      btn.disabled = false;
+    });
+  });
+});
+
 renderGames();

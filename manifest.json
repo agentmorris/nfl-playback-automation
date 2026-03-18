@@ -3,7 +3,7 @@
   "name": "NFL Playback Position Saver",
   "version": "1.0",
   "description": "Remembers and restores playback position for NFL+ game replays",
-  "permissions": ["storage"],
+  "permissions": ["storage", "activeTab"],
   "content_scripts": [
     {
       "matches": ["https://www.nfl.com/plus/games/*"],

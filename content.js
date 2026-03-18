@@ -112,5 +112,38 @@
     }, CHECK_INTERVAL);
   }
 
+  // Listen for save requests from the popup
+  chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    if (message.action === "savePosition") {
+      const videos = document.querySelectorAll("video");
+      let v = video;
+      // If the content script hasn't found the video yet, try to find one now
+      if (!v) {
+        for (const candidate of videos) {
+          if ((candidate.src || candidate.currentSrc) && candidate.duration > 0) {
+            v = candidate;
+            break;
+          }
+        }
+      }
+      if (!v || !v.currentTime) {
+        sendResponse({ success: false, error: "No video found on this page" });
+        return;
+      }
+      const time = v.currentTime;
+      const data = {
+        time: time,
+        duration: v.duration,
+        slug: gameSlug,
+        url: window.location.href,
+        savedAt: new Date().toISOString(),
+      };
+      chrome.storage.local.set({ [STORAGE_KEY]: data }, function () {
+        sendResponse({ success: true, data: data });
+      });
+      return true; // keep message channel open for async sendResponse
+    }
+  });
+
   waitForVideo();
 })();
