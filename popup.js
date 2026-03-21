@@ -49,10 +49,13 @@ function renderGames() {
       }
     }
 
+    var clearBtn = document.getElementById("clear-all-btn");
     if (entries.length === 0) {
       container.innerHTML = '<div class="empty">No saved positions yet. Watch a game on NFL+ and your position will be saved automatically.</div>';
+      clearBtn.style.display = "none";
       return;
     }
+    clearBtn.style.display = "block";
 
     // Sort by most recently saved
     entries.sort(function (a, b) {
@@ -137,6 +140,14 @@ document.getElementById("save-btn").addEventListener("click", function () {
       }
       btn.disabled = false;
     });
+  });
+});
+
+document.getElementById("clear-all-btn").addEventListener("click", function () {
+  if (!confirm("Remove all saved positions?")) return;
+  chrome.storage.local.get(null, function (items) {
+    var keys = Object.keys(items).filter(function (k) { return k.startsWith("nfl_position_"); });
+    chrome.storage.local.remove(keys, renderGames);
   });
 });
 
