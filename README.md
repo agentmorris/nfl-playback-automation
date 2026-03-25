@@ -2,6 +2,8 @@
 
 A Chrome extension that remembers your playback position for NFL+ game replays. NFL+ does not natively save your position when watching replays, so this extension fills that gap.
 
+The extension is available in the Chrome Web Store [here](https://chromewebstore.google.com/detail/nfl-playback-position-sav/mkfajpdocmiaehhmoglmanbphpeogedo).
+
 <img src="popup_ui_tight.jpg">
 
 ## What it does
@@ -56,6 +58,21 @@ If you want to publish this extension publicly:
 5. Submit for review
 
 Google typically reviews submissions within 1-3 business days. A simple extension like this should pass without issues. Updates go through the same review process.
+
+## Updating the published extension
+
+1. Increment the version number in `manifest.json`
+2. Zip the extension files (excluding `.git/`, `.claude/`, `.playwright-mcp/`, and `README.md`):
+   ```
+   cd c:/git/nfl-playback-automation
+   powershell -Command "Compress-Archive -Path manifest.json, content.js, popup.html, popup.js, icon-48.png, icon-64.png, icon-128.png, icon-256.png -DestinationPath 'g:\temp\nfl-playback-position-saver.zip' -Force"
+   ```
+3. In the Chrome Web Store Developer Dashboard, click on the extension to open its listing
+4. Click **Package** in the left sidebar and upload the new zip file
+5. If the update adds or broadens permissions, the dashboard will prompt for justifications — fill these in
+6. Click **Submit for review**
+
+Google typically reviews updates within 1-3 business days. Existing users will auto-update once approved.
 
 ## Development notes
 
