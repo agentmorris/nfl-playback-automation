@@ -16,7 +16,7 @@
 
   // Extract game slug from URL, e.g. "broncos-at-ravens-2009-reg-8"
   function getGameSlug() {
-    const match = window.location.pathname.match(/\/plus\/games\/([^/?#]+)/);
+    const match = window.location.pathname.match(/\/(?:plus\/)?games\/([^/?#]+)/);
     return match ? match[1] : null;
   }
 

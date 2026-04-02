@@ -109,7 +109,7 @@ function getTimeAgo(date) {
 // Show the save button only if the active tab is an NFL game page
 chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
   const tab = tabs[0];
-  if (tab && tab.url && tab.url.match(/nfl\.com\/plus\/games\//)) {
+  if (tab && tab.url && tab.url.match(/nfl\.com\/(?:plus\/)?games\//)) {
     document.getElementById("save-btn").style.display = "block";
   }
 });
