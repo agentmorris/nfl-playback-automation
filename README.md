@@ -1,8 +1,8 @@
 # NFL Playback Position Saver
 
-A Chrome extension that remembers your playback position for NFL+ game replays. NFL+ does not natively save your position when watching replays, so this extension fills that gap.
+A browser extension (Chrome and Firefox) that remembers your playback position for NFL+ game replays. NFL+ does not natively save your position when watching replays, so this extension fills that gap.
 
-The extension is available in the Chrome Web Store [here](https://chromewebstore.google.com/detail/nfl-playback-position-sav/mkfajpdocmiaehhmoglmanbphpeogedo).
+The Chrome version is available in the Chrome Web Store [here](https://chromewebstore.google.com/detail/nfl-playback-position-sav/mkfajpdocmiaehhmoglmanbphpeogedo).
 
 <img src="popup_ui_tight.jpg">
 
@@ -17,22 +17,37 @@ Click the extension icon to see all your saved games, their positions, and links
 
 ## Installation
 
+### Chrome
+
 1. Clone or download this repository
 2. Open Chrome and navigate to `chrome://extensions`
 3. Enable **Developer mode** (toggle in the top-right corner)
 4. Click **Load unpacked**
-5. Select the folder containing this repository
+5. Select the `chrome/` subdirectory of this repository
 
-The extension is now active. Navigate to any NFL+ game replay and your position will be saved automatically.
+### Firefox
+
+1. Clone or download this repository
+2. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
+3. Click **Load Temporary Add-on…**
+4. Select `firefox/manifest.json` in this repository
+
+Firefox unloads temporary add-ons when the browser restarts. To install permanently, package a signed XPI (see "Publishing to Firefox Add-ons" below).
+
+After installing in either browser, navigate to any NFL+ game replay and your position will be saved automatically.
 
 ## Files
 
-| File | Purpose |
+The repository contains two parallel extension builds — `chrome/` and `firefox/` — with identical source files. The only difference is that `firefox/manifest.json` adds the `browser_specific_settings.gecko.id` that Firefox requires.
+
+| File (in each of `chrome/` and `firefox/`) | Purpose |
 |------|---------|
-| `manifest.json` | Chrome extension manifest (Manifest V3) |
+| `manifest.json` | Extension manifest (Manifest V3) |
 | `content.js` | Content script that saves/restores video position |
 | `popup.html` | Extension popup UI |
 | `popup.js` | Popup logic — lists saved games with positions |
+
+When changing source files, update both `chrome/` and `firefox/` so the two builds stay in sync.
 
 ## Publishing to the Chrome Web Store
 
@@ -51,7 +66,7 @@ If you want to publish this extension publicly:
 
 ### Submit
 
-1. Zip the extension folder (excluding `.claude/`, `.playwright-mcp/`, and `.git/`)
+1. Zip the contents of the `chrome/` subdirectory (the zip must have `manifest.json` at its root, not nested in a folder)
 2. Upload the zip in the Developer Dashboard
 3. Fill out the listing: description, category, screenshots, icons
 4. Complete the privacy practices questionnaire (no remote code, no data collection, single purpose: saving playback position)
@@ -59,12 +74,12 @@ If you want to publish this extension publicly:
 
 Google typically reviews submissions within 1-3 business days. A simple extension like this should pass without issues. Updates go through the same review process.
 
-## Updating the published extension
+## Updating the published Chrome extension
 
-1. Increment the version number in `manifest.json`
-2. Zip the extension files (excluding `.git/`, `.claude/`, `.playwright-mcp/`, and `README.md`):
+1. Increment the version number in `chrome/manifest.json`
+2. Zip the contents of `chrome/`:
    ```
-   cd c:/git/nfl-playback-automation
+   cd c:/git/nfl-playback-automation/chrome
    powershell -Command "Compress-Archive -Path manifest.json, content.js, popup.html, popup.js, icon-48.png, icon-64.png, icon-128.png, icon-256.png -DestinationPath 'g:\temp\nfl-playback-position-saver.zip' -Force"
    ```
 3. In the Chrome Web Store Developer Dashboard, click on the extension to open its listing
@@ -74,6 +89,20 @@ Google typically reviews submissions within 1-3 business days. A simple extensio
 
 Google typically reviews updates within 1-3 business days. Existing users will auto-update once approved.
 
+## Publishing to Firefox Add-ons (AMO)
+
+The Firefox build lives in `firefox/`. Mozilla's developer hub is at [addons.mozilla.org/developers](https://addons.mozilla.org/developers/). You can either list the extension on AMO (public distribution, reviewed) or self-distribute a signed XPI. Either path requires a free developer account and that the submitted archive is signed by Mozilla.
+
+To produce the archive for submission:
+
+```
+cd c:/git/nfl-playback-automation/firefox
+powershell -Command "Compress-Archive -Path manifest.json, content.js, popup.html, popup.js, icon-48.png, icon-64.png, icon-128.png, icon-256.png -DestinationPath 'g:\temp\nfl-playback-position-saver-firefox.zip' -Force"
+```
+
+Upload the zip through the AMO developer hub; Mozilla's review/signing process produces the final XPI.
+
 ## Development notes
 
-- **Always increment the version number** in `manifest.json` with any code change, even minor ones. This lets the user verify that an update was picked up after reloading the extension in `chrome://extensions`. The current version is shown on the extension's card.
+- **Always increment the version number** in both `chrome/manifest.json` and `firefox/manifest.json` with any code change, even minor ones. This lets you verify that an update was picked up after reloading the extension (Chrome: `chrome://extensions`; Firefox: `about:debugging`). The current version is shown on the extension's card.
+- When editing source files, update the copies in both `chrome/` and `firefox/`. The two builds are intentionally kept as byte-identical source mirrors; only the manifests differ.

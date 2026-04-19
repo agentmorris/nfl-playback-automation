@@ -1,8 +1,16 @@
 {
   "manifest_version": 3,
   "name": "NFL Playback Position Saver",
-  "version": "1.4",
+  "version": "1.6",
   "description": "Remembers and restores playback position for NFL+ game replays",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "nfl-playback-position-saver@no-reply.invalid",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
+    }
+  },
   "permissions": ["storage", "activeTab"],
   "content_scripts": [
     {

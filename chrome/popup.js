@@ -51,7 +51,10 @@ function renderGames() {
 
     var clearBtn = document.getElementById("clear-all-btn");
     if (entries.length === 0) {
-      container.innerHTML = '<div class="empty">No saved positions yet. Watch a game on NFL+ and your position will be saved automatically.</div>';
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = "No saved positions yet. Watch a game on NFL+ and your position will be saved automatically.";
+      container.replaceChildren(empty);
       clearBtn.style.display = "none";
       return;
     }
@@ -62,7 +65,7 @@ function renderGames() {
       return new Date(b.savedAt) - new Date(a.savedAt);
     });
 
-    container.innerHTML = "";
+    container.replaceChildren();
     entries.forEach(function (entry) {
       const div = document.createElement("div");
       div.className = "game";
@@ -74,23 +77,42 @@ function renderGames() {
       const saved = new Date(entry.savedAt);
       const timeAgo = getTimeAgo(saved);
 
-      div.innerHTML =
-        '<div class="game-name">' + slugToTitle(entry.slug) + "</div>" +
-        '<div class="game-time">Position: ' + formatTime(entry.time) + progress + "</div>" +
-        '<div class="game-time">Saved: ' + timeAgo + "</div>" +
-        '<div class="game-actions">' +
-        '<a href="' + entry.url + '" target="_blank">Open game</a>' +
-        '<button data-key="nfl_position_' + entry.slug + '">Remove</button>' +
-        "</div>";
+      const nameDiv = document.createElement("div");
+      nameDiv.className = "game-name";
+      nameDiv.textContent = slugToTitle(entry.slug);
+
+      const posDiv = document.createElement("div");
+      posDiv.className = "game-time";
+      posDiv.textContent = "Position: " + formatTime(entry.time) + progress;
+
+      const savedDiv = document.createElement("div");
+      savedDiv.className = "game-time";
+      savedDiv.textContent = "Saved: " + timeAgo;
+
+      const actions = document.createElement("div");
+      actions.className = "game-actions";
+
+      const link = document.createElement("a");
+      link.href = entry.url;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "Open game";
+
+      const removeBtn = document.createElement("button");
+      removeBtn.textContent = "Remove";
+      const storageKey = "nfl_position_" + entry.slug;
+      removeBtn.addEventListener("click", function () {
+        chrome.storage.local.remove(storageKey, renderGames);
+      });
+
+      actions.appendChild(link);
+      actions.appendChild(removeBtn);
+      div.appendChild(nameDiv);
+      div.appendChild(posDiv);
+      div.appendChild(savedDiv);
+      div.appendChild(actions);
 
       container.appendChild(div);
-    });
-
-    // Bind remove buttons
-    container.querySelectorAll("button[data-key]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        chrome.storage.local.remove(btn.dataset.key, renderGames);
-      });
     });
   });
 }
