@@ -1,2 +1,6 @@
 .claude/
+.gemini/
+.codex/
+.tools/
+node_modules/
 .playwright-mcp/

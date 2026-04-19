@@ -32,7 +32,6 @@
 
   function savePosition() {
     if (!video || !storageKey) return;
-    if (video.paused && hasRestored) return;
     const time = video.currentTime;
     if (time < MIN_POSITION_TO_SAVE) return;
 
