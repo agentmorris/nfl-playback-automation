@@ -4,6 +4,8 @@ A browser extension (Chrome and Firefox) that remembers your playback position f
 
 The Chrome version is available in the Chrome Web Store [here](https://chromewebstore.google.com/detail/nfl-playback-position-sav/mkfajpdocmiaehhmoglmanbphpeogedo).
 
+The Firefox version is available in the Firefox add-on marketplace [here](https://addons.mozilla.org/en-US/firefox/addon/nfl-playback-position-saver/).
+
 <img src="popup_ui_tight.jpg">
 
 ## What it does
